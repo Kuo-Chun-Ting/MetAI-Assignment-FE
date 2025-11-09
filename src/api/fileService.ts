@@ -6,7 +6,7 @@ import type {
   UpdateFilenameRequest,
 } from '../types/api'
 
-const DEFAULT_LIMIT = 10
+const DEFAULT_LIMIT = 3
 
 export async function uploadFile(
   file: File,

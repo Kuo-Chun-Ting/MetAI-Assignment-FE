@@ -130,7 +130,7 @@ const authStore = useAuthStore()
 
 const files = ref<FileResponse[]>([])
 const total = ref(0)
-const limit = ref(10)
+const limit = ref(3)
 const offset = ref(0)
 const sortBy = ref<SortBy>('upload_timestamp')
 const order = ref<Order>('desc')
