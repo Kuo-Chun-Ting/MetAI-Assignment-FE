@@ -22,8 +22,13 @@ export function extractError(err: unknown): string {
       return possible.response.data.detail
     }
 
-    // Priority 2: Get the general message from the error object.
-    // This handles network-level errors (e.g., "Network Error", "Timeout").
+    // Priority 2: Check for specific network-level errors that might indicate a cold start.
+    if (possible.message === 'Network Error') {
+      return 'Backend server might be cold-starting (Render free tier), please wait a few seconds and try again.'
+    }
+
+    // Priority 3: Get the general message from the error object.
+    // This handles other network-level errors (e.g., "Timeout").
     if (possible.message) {
       return possible.message
     }
