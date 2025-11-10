@@ -60,6 +60,7 @@
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { extractError } from '../utils/errorUtils'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -84,9 +85,7 @@ async function handleSubmit() {
     await authStore.register({ username: username.value, password: password.value })
     router.push('/')
   } catch (err: any) {
-    console.error('Register error:', err)
-    const detail = err.response?.data?.detail
-    errorMessage.value = detail || 'Registration failed. Please try again.'
+    errorMessage.value = extractError(err)
   } finally {
     loading.value = false
   }

@@ -22,10 +22,15 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token invalid, clear and redirect to login
-      localStorage.removeItem('token')
-      localStorage.removeItem('username')
-      window.location.href = '/login'
+      const isLoginOrRegister =
+        error.config.url === '/auth/login' || error.config.url === '/auth/register'
+
+      if (!isLoginOrRegister) {
+        // Token invalid for protected routes, clear and redirect to login
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

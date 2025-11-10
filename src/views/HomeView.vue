@@ -114,6 +114,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { extractError } from '../utils/errorUtils'
 import {
   deleteFile,
   downloadFile,
@@ -285,21 +286,17 @@ function isImage(filename: string): boolean {
   return extensions.some((ext) => filename.toLowerCase().endsWith(ext))
 }
 
-function extractError(err: unknown): string {
-  if (typeof err === 'object' && err !== null) {
-    const possible = err as {
-      response?: { data?: { detail?: string } }
-      message?: string
-    }
-    if (possible.response?.data?.detail) return possible.response.data.detail
-    if (possible.message) return possible.message
-  }
-  return 'Something went wrong. Please try again.'
-}
-
 async function handleLogout() {
-  await authStore.logout()
-  router.push('/login')
+  tableError.value = '' // Clear previous errors
+  try {
+    await authStore.logout()
+    router.push('/login')
+  } catch (err) {
+    tableError.value = extractError(err)
+    // Even if logout API fails, we still clear local storage and redirect for UX consistency
+    // The user will see an error message but will be logged out locally.
+    router.push('/login')
+  }
 }
 </script>
 

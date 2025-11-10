@@ -41,6 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
       await api.post('/auth/logout')
     } catch (err) {
       console.error('Logout API failed:', err)
+      throw err // Re-throw the error so the calling component can handle it
     } finally {
       token.value = null
       username.value = null
