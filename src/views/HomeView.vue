@@ -113,6 +113,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { isAxiosError } from 'axios'
 import { useAuthStore } from '../stores/auth'
 import { extractError } from '../utils/errorUtils'
 import {
@@ -232,6 +233,10 @@ async function handleDownload(file: FileResponse) {
     a.click()
     URL.revokeObjectURL(url)
   } catch (err) {
+    if (isAxiosError(err) && err.code === 'ECONNABORTED') {
+      tableError.value = 'Download timed out. The file may be too large or the network is slow.'
+      return
+    }
     tableError.value = extractError(err)
   }
 }
