@@ -45,6 +45,7 @@ export async function downloadFile(
 ): Promise<{ blob: Blob; filename: string | null }> {
   const response = await api.get<Blob>(`/files/${fileId}/download`, {
     responseType: 'blob',
+    timeout: 180000,
   })
 
   const disposition = response.headers['content-disposition'] as string | undefined
